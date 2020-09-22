@@ -55,7 +55,7 @@ def strip_dir_structure(image_dir_path,pipeline_path):
 def load_config(config_file):
     with open(config_file, 'r') as stream:
         config = yaml.safe_load(stream)
-        results_file = config[model_name]['results']
+        results_file = config['image_segmentation']['results']
         pipeline = config['general']['pipeline_path']
     output_dir = strip_dir_structure(img_dir,pipeline)
     return config, results_file, pipeline, output_dir
@@ -66,7 +66,7 @@ model_name = 'encoding'
 img_dir = os.path.join(mapped_dir,sys.argv[1])
 config_file = os.path.join(mapped_dir,sys.argv[2])
 config, results_file, pipeline, output_dir = load_config(config_file)
-decoder_file = os.path.join(mapped_dir,config[model_name]['decoder'])
+decoder_file = os.path.join(mapped_dir,config['image_segmentation']['decoder'])
 decoder = load_decoder(decoder_file)
 total_imgs = len(os.listdir(img_dir))
 
