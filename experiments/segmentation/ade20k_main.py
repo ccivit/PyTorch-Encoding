@@ -36,7 +36,7 @@ def load_decoder(decoder_file):
                 decoder.append(row[4])
     return decoder
 
-def decode_image(img_mask,decoder):
+def decode_image_pixels(img_mask,decoder):
     decoded_image = {}
     for i,row in enumerate(img_mask[0]):
         for j,value in enumerate(row):
@@ -45,6 +45,17 @@ def decode_image(img_mask,decoder):
                 decoded_image[decoded_value] = [[i,j]]
             else:
                 decoded_image[decoded_value].append([i,j])
+    return decoded_image
+
+def decode_image_pixel_counts(img_mask,decoder):
+    decoded_image = {}
+    for i,row in enumerate(img_mask[0]):
+        for j,value in enumerate(row):
+            decoded_value = decoder[int(value)]
+            if decoded_value not in decoded_image:
+                decoded_image[decoded_value] = 1
+            else:
+                decoded_image[decoded_value] += 1
     return decoded_image
 
 
@@ -94,6 +105,6 @@ for i,img_file in enumerate(os.listdir(img_dir)):
         del model
         torch.cuda.empty_cache()
 
-        decoded_image = decode_image(predict,decoder)
+        decoded_image = decode_image_pixel_counts(predict,decoder)
         print(decoded_image.keys())
         yaml.dump(decoded_image, open(output_path, "w"), default_flow_style=False)
